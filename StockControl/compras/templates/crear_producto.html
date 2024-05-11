@@ -1,0 +1,67 @@
+{% extends "index.html" %}
+{% block title %}{% if producto %}Editar{% else %}Crear nuevo{% endif %} Producto{% endblock %}
+
+{% block content %}
+
+    
+    <h2 class="p-2">{% if producto %}Editar{% else %}Crear nuevo{% endif %} Producto</h2>
+    
+    {% if mensaje %}
+      <div class="alert alert-warning" role="alert">
+          {{ mensaje }}
+      </div>
+    {% endif %}
+    <form id="crear-producto" class="crear-producto"action="" method="post">
+        {% csrf_token %}
+        <div class="form group mb-3">
+          <label for="nombre" class="form-label">Nombre</label>
+          <input
+            type="text" 
+            class="form-control" 
+            id="nombre" 
+            name="nombre"
+            value="{% if producto %}{{producto.nombre}}{% endif %}">
+        </div>
+        <div class="form group mb-3">
+          <label for="precio" class="form-label">Precio</label>
+          <input
+            type="number" 
+            step="0.01" 
+            class="form-control" 
+            id="precio" 
+            name="precio"
+            value="{% if producto %}{{producto.precio}}{% endif %}">
+        </div>
+        <div class="form group mb-3">
+          <label for="stock_actual" class="form-label">Stock actual</label>
+          <input
+            type="number" 
+            class="form-control" 
+            id="stock_actual" 
+            name="stock_actual"
+            value="{% if producto %}{{producto.stock_actual}}{% endif %}">
+        </div>
+        <div class="form group mb-3">
+          <label for="proveedor" class="form-label">Proveedor</label>
+          <select
+            id="proveedor-select" 
+            class="form-select mb-3" 
+            aria-label="Default select example" 
+            name="proveedor" 
+            {% if producto %}disabled{% endif %}>
+            <option selected>{% if producto %}{{ producto.proveedor.nombre }} {{ producto.proveedor.apellido }}{% else %}-- Seleccionar proveedor --{% endif %}</option>
+            {% for proveedor in proveedores %}
+              <option value={{proveedor.dni}}>{{ proveedor.nombre }} {{ proveedor.apellido }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        {% if not producto %}
+          <div class="form group mb-3">
+            <a class="mb-3" href="{% url 'proveedores_crear' %}">Agregar nuevo proveedor</a>
+          </div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary mb-2">Guardar</button>
+      </form>
+    <a class="mb-3" href="{% url 'productos_listado' %}">Volver al Listado</a>  
+
+{% endblock %}
